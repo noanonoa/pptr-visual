@@ -9,7 +9,7 @@ describe('Visual Regression Testing', () => {
 
   beforeAll(async function(){
     browser = await puppeteer.launch({
-      headless: true,
+      headless: false,
       slowMo: 10,
     })
     page = await browser.newPage()
@@ -63,5 +63,17 @@ describe('Visual Regression Testing', () => {
       failureThresholdType: 'percent',
       failureThreshold: 0.01,
     })
+  })
+
+  test('Remove Element Before Snapshot', async function(){
+    await page.goto('https://www.example.com')
+    await page.evaluate(() => {
+      (document.querySelectorAll('h1') || []).forEach(element => element.remove())
+    })
+    const image = await page.screenshot()
+    expect(image).toMatchImageSnapshot({
+      failureThresholdType: 'percent',
+      failureThreshold: 0.01,
+    }) 
   })
 })
