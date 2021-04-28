@@ -53,4 +53,15 @@ describe('Visual Regression Testing', () => {
       failureThreshold: 0.01,
     })
   })
+  
+  test('Tablet Snapshot', async function(){
+    await page.goto('https://www.example.com')
+    await page.waitForSelector('h1')
+    await page.emulate(puppeteer.devices['iPad landscape'])    
+    const image = await page.screenshot()
+    expect(image).toMatchImageSnapshot({
+      failureThresholdType: 'percent',
+      failureThreshold: 0.01,
+    })
+  })
 })
